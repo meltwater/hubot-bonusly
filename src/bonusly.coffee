@@ -23,12 +23,10 @@ module.exports = (robot) ->
   adapter = robot.adapterName
   client = "hubot-#{robot.adapterName}"
   service = 'https://bonus.ly'
-
-  unless token
-    msg.send 'The Bonusly API token is not set. Navigate to https://bonus.ly/api as an _admin_ user (important), grab the access token and set the HUBOT_BONUSLY_ADMIN_API_TOKEN environment variable.'
-    return
+  bad_token_message = 'The Bonusly API token is not set. Navigate to https://bonus.ly/api as an _admin_ user (important), grab the access token and set the HUBOT_BONUSLY_ADMIN_API_TOKEN environment variable.'
 
   robot.respond /(bonusly)? bonuses/i, (msg) ->
+    return msg.send bad_token_message unless token
     msg.send "o.k. I'm grabbing recent bonuses ..."
     path="/api/v1/bonuses?access_token=#{token}&limit=10"
     msg.http(service)
@@ -47,6 +45,7 @@ module.exports = (robot) ->
             msg.send "Request (#{service}#{path}) failed (#{res.statusCode})."
 
   robot.respond /(bonusly)? ?leaderboard ?(giver|receiver)?/i, (msg) ->
+    return msg.send bad_token_message unless token
     type_str = msg.match[2]
     type = if (type_str? && type_str == 'giver') then 'giver' else 'receiver'
     path="/api/v1/leaderboards/count-#{type}?access_token=#{token}&limit=10"
@@ -67,6 +66,7 @@ module.exports = (robot) ->
 
 
   robot.respond /(bonusly)? (give) ?(.*)?/i, (msg) ->
+    return msg.send bad_token_message unless token
     giver = msg.message.user.name.toLowerCase()
     text = msg.match[3]
 
