@@ -76,7 +76,7 @@ module.exports = (robot) ->
       text = ''
 
     path = '/api/v1/bonuses/create_from_text'
-    post = "access_token=#{token}&giver=#{giver}&client=#{client}&text=#{text}" 
+    post = "access_token=#{token}&giver=#{encodeURIComponent(giver)}&client=#{encodeURIComponent(client)}&text=#{encodeURIComponent(text)}" 
 
     msg.http(service)
       .path(path)
