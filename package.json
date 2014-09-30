@@ -14,11 +14,11 @@
 
   "repository": {
     "type": "git",
-    "url": "https://github.com/bonusly/hubot-bonusly.git"
+    "url": "https://github.com/hubot-scripts/hubot-bonusly"
   },
 
   "bugs": {
-    "url": "https://github.com/bonusly/hubot-bonusly/issues"
+    "url": "https://github.com/hubot-scripts/hubot-bonusly/issues"
   },
 
   "dependencies": {
