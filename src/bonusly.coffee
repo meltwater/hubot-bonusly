@@ -5,7 +5,8 @@
 #   None
 #
 # Configuration:
-#   HUBOT_BONUSLY_ADMIN_API_TOKEN
+#   HUBOT_BONUSLY_ADMIN_API_TOKEN - Obtain via https://bonus.ly/api
+#   HUBOT_BONUSLY_HIDE_AMOUNTS - (optional) If set, hide amounts
 #
 # Commands:
 #   hubot bonusly give <amount> to <name|email> for <reason> <#hashtag> - gives a micro-bonus to the specified user
@@ -36,7 +37,10 @@ module.exports = (robot) ->
           when 200
             data = JSON.parse body
             bonuses = data.result
-            bonuses_text = ("From #{bonus.giver.short_name} to #{bonus.receiver.short_name}: #{bonus.amount_with_currency} #{bonus.reason}" for bonus in bonuses).join('\n')
+            if process.env.HUBOT_BONUSLY_HIDE_AMOUNTS? && process.env.HUBOT_BONUSLY_HIDE_AMOUNTS == '1'
+              bonuses_text = ("From #{bonus.giver.short_name} to #{bonus.receiver.short_name} #{bonus.reason}" for bonus in bonuses).join('\n')
+            else
+              bonuses_text = ("From #{bonus.giver.short_name} to #{bonus.receiver.short_name}: #{bonus.amount_with_currency} #{bonus.reason}" for bonus in bonuses).join('\n')
             msg.send bonuses_text
           when 400
             data = JSON.parse body
@@ -48,14 +52,14 @@ module.exports = (robot) ->
     return msg.send bad_token_message unless token
     type_str = msg.match[2]
     type = if (type_str? && type_str == 'giver') then 'giver' else 'receiver'
-    path="/api/v1/leaderboards/count-#{type}?access_token=#{token}&limit=10"
+    path="/api/v1/analytics/standouts?access_token=#{token}&role=#{type}&limit=10"
     msg.send "o.k. I'll pull up the top #{type}s for you ..."
     msg.http(service)
       .path(path)
       .get() (err, res, body) ->
         switch res.statusCode
           when 200
-            leaders = JSON.parse body
+            leaders = JSON.parse(body).result
             leaders_text = ("##{index+1} with #{leader.count} bonuses: #{leader.user.first_name} #{leader.user.last_name}" for leader, index in leaders).join('\n')
             msg.send leaders_text
           when 400
