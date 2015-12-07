@@ -6,6 +6,8 @@ Hubot Bonusly integration (employee recognition with micro-bonuses)
 ## Config
 ### Required
 HUBOT_BONUSLY_ADMIN_API_TOKEN
+HUBOT_HIPCHAT_JID - (only needed for hipchat)
+HUBOT_HIPCHAT_TOKEN - (only needed for hipchat)
 
 ## Commands
 -  `hubot give <amount> to <name|email> for <reason> <#hashtag>` - gives a micro-bonus to the specified user
@@ -25,7 +27,7 @@ Include `hubot-bonusly` as a dependency in `package.json` e.g.
 ```
   "dependencies": {
     "hubot": ">= 2.6.0 < 3.0.0",
-    ... 
+    ...
     "hubot-bonusly": ""
   }
 ```
