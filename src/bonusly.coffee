@@ -113,7 +113,7 @@ module.exports = (robot) ->
                 msg.send "o.k. I'll try to give that bonus ..."
                 path = '/api/v1/bonuses?'
                 params = "access_token=#{token}&giver_email=#{encodeURIComponent(giver)}&receiver_email=#{encodeURIComponent(receiverIdentifier)}&amount=#{amount}&reason=#{encodeURIComponent(text)}"
-
+                console.log(path+params)
                 msg.http(service)
                   .path(path)
                   .header('Content-Type', 'application/x-www-form-urlencoded')
